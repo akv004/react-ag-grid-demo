@@ -1,6 +1,9 @@
 import "./styles.css";
 import { AgGridReact } from "@ag-grid-community/react";
-import { AllModules } from "@ag-grid-community/all-modules";
+import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
+import { AllCommunityModules } from "@ag-grid-community/all-modules";
+import "@ag-grid-community/all-modules/dist/styles/ag-grid.css";
+import "@ag-grid-community/all-modules/dist/styles/ag-theme-balham.css";
 
 export default function App() {
   const columnDefs = [
@@ -16,16 +19,24 @@ export default function App() {
     { make: "Porsche", model: "Boxter", price: 72000 }
   ];
 
-  // let the grid know which columns and what data to use
-  const gridOptions = {
-    columnDefs: columnDefs,
-    rowData: rowData
+  const onGridReady = (params) => {
+    params.api.sizeColumnsToFit();
+  };
+
+  const defaultColumnDefs = {
+    resizable: true,
+    sortable: true
   };
 
   return (
-    <div className="App">
-      <h1>Hello CodeSandbox</h1>
-      <h2>Start editing to see some magic happen!</h2>
+    <div className="ag-theme-balham" style={{ height: 400, width: 600 }}>
+      <AgGridReact
+        rowData={rowData}
+        onGridReady={onGridReady}
+        columnDefs={columnDefs}
+        defaultColDef={defaultColumnDefs}
+        modules={[AllCommunityModules, ClientSideRowModelModule]}
+      ></AgGridReact>
     </div>
   );
 }
